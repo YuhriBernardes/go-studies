@@ -5,7 +5,7 @@ import (
 	"flag"
 	"os"
 
-	"github.com/YuhriBernardes/go-studies-concurrency/sample"
+	"github.com/YuhriBernardes/gs-scheduler/sample"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -33,7 +33,7 @@ func processArgs() (err error) {
 	flag.Parse()
 
 	if sampleName == "" {
-		return errors.New("You need to specify the desired sample (e.g. -sample=countdown)")
+		return errors.New("You have to specify the desired sample (e.g. -sample=countdown)")
 	}
 
 	return nil
