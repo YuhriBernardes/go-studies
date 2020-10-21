@@ -20,9 +20,10 @@ gs <sample-name> <sample-specific-parameters>
 
 > Some samples doesn't have parameters
 
-|      Samples Name       |
-| :---------------------: |
-| [countdown](#countdown) |
+|      Samples Name       | Description           |
+| :---------------------: | :-------------------- |
+| [countdown](#countdown) | Parallel countdowns   |
+|   [servers](#servers)   | Parallel HTTP servers |
 
 ## Samples
 
@@ -48,3 +49,26 @@ gs countdown --c1=<counter-1-value> --c2=<counter-2-value>
 | --------- | --------- | ----------------------- | ------- |
 | NO        | c1        | Counter 1 initial value | 10      |
 | NO        | c2        | Counter 2 initial value | 10      |
+
+
+### Servers
+
+An app with 2 HTTP servers.
+To run the app, use the command below:
+
+```shell
+go run ./main.go servers --port1=<server1-port> --port2=<server2-port>
+```
+
+or
+
+```shell
+gs servers --port1=<server1-port> --port2=<server2-port>
+```
+
+#### Parameters
+
+| Required? | Parameter | Description   | Default |
+| --------- | --------- | ------------- | ------- |
+| NO        | port1     | Server 1 port | 3000    |
+| NO        | port2     | Server 2 port | 3001    |
