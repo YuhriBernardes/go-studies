@@ -5,6 +5,7 @@ import "github.com/spf13/cobra"
 var (
 	samples = []Sample{
 		&CountDown{},
+		&Servers{},
 	}
 )
 
