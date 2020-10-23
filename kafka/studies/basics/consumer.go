@@ -16,6 +16,7 @@ func NewConsumer(bootstrapServers string, groupId string) *consumer {
 	instance, err := kafka.NewConsumer(&kafka.ConfigMap{
 		"bootstrap.servers": bootstrapServers,
 		"group.id":          groupId,
+		"auto.offset.reset": "earliest",
 	})
 
 	if err != nil {
