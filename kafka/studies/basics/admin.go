@@ -13,9 +13,11 @@ type admin struct {
 	timeout time.Duration
 }
 
-func NewAdmin(config *kafka.ConfigMap, timeout time.Duration) *admin {
+func NewAdmin(bootstrapServers string, timeout time.Duration) *admin {
 	log.Warn("Creating new admin")
-	adm, err := kafka.NewAdminClient(config)
+	adm, err := kafka.NewAdminClient(&kafka.ConfigMap{
+		"bootstrap.servers": bootstrapServers,
+	})
 
 	if err != nil {
 		log.WithError(err).Error("Failed to start client")
