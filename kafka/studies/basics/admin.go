@@ -14,6 +14,7 @@ type admin struct {
 }
 
 func NewAdmin(config *kafka.ConfigMap, timeout time.Duration) *admin {
+	log.Warn("Creating new admin")
 	adm, err := kafka.NewAdminClient(config)
 
 	if err != nil {
@@ -37,38 +38,53 @@ func defaultTopicConfig(name string) kafka.TopicSpecification {
 
 func (a admin) Newtopic(name string, opts ...kafka.AdminOption) {
 
-	ctx := context.Background()
-	clusterId, _ := a.adm.ClusterID(ctx)
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
 
-	config := defaultTopicConfig(name)
+	topicConfig := defaultTopicConfig(name)
 
 	log.WithFields(log.Fields{
-		"cluster ID":     clusterId,
-		"name":           config.Topic,
-		"partitionCount": config.NumPartitions,
+		"topic": name,
 	}).Warn("Creating topic")
 
-	_, err := a.adm.CreateTopics(ctx, []kafka.TopicSpecification{config}, kafka.SetAdminRequestTimeout(a.timeout), kafka.SetAdminOperationTimeout(a.timeout))
+	results, err := a.adm.CreateTopics(ctx, []kafka.TopicSpecification{
+		topicConfig,
+	}, kafka.SetAdminOperationTimeout(a.timeout))
 
 	if err != nil {
-		log.WithError(err).Errorf("Failed to create topic %s", config.Topic)
-		panic(err)
+		log.WithError(err).Error("Failed to create topic")
+	}
+
+	for _, result := range results {
+		log.WithFields(log.Fields{
+			"Topic": result,
+		}).Info("Topic created")
 	}
 }
 
 func (a admin) DeleteTopic(name string) {
 
-	ctx := context.Background()
-	clusterId, _ := a.adm.ClusterID(ctx)
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
 
 	log.WithFields(log.Fields{
-		"cluster ID": clusterId,
-		"name":       name,
+		"name": name,
 	}).Warn("Deleting topic")
+	results, err := a.adm.DeleteTopics(ctx, []string{name}, kafka.SetAdminOperationTimeout(a.timeout))
 
-	if _, err := a.adm.DeleteTopics(ctx, []string{name}, kafka.SetAdminRequestTimeout(a.timeout), kafka.SetAdminOperationTimeout(a.timeout)); err != nil {
+	if err != nil {
 		log.WithError(err).Errorf("Failed to delete topic %s", name)
 		panic(err)
 	}
 
+	for _, result := range results {
+		log.WithFields(log.Fields{
+			"Topic": result,
+		}).Info("Topic deleted")
+	}
+
+}
+
+func (a admin) Close() {
+	a.adm.Close()
 }
