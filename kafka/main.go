@@ -39,7 +39,7 @@ func main() {
 		}).Info("Message received")
 	})
 
-	mainChan := make(chan os.Signal)
+	mainChan := make(chan os.Signal, 1)
 
 	signal.Notify(mainChan, os.Interrupt)
 
