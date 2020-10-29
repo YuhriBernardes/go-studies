@@ -1,11 +1,8 @@
 package main
 
 import (
-	"os"
-	"os/signal"
-	"time"
-
-	"github.com/YuhriBernardes/kafka/studies/basics"
+	"github.com/YuhriBernardes/kafka/studies"
+	"github.com/YuhriBernardes/kafka/studies/loop"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -20,35 +17,10 @@ func configLogs() {
 func main() {
 	configLogs()
 
-	timeout := time.Second * 3
-	bootstrapServers := "localhost:9092"
-	topic := "my.topic"
+	loop.Cmd.Register()
 
-	a := basics.NewAdmin(bootstrapServers, timeout)
+	if err := studies.Execute(); err != nil {
+		log.WithError(err).Error("Failed to start cli")
+	}
 
-	a.Newtopic(topic)
-
-	p := basics.NewProducer("Producer 1", bootstrapServers, []string{topic})
-	p.Start(2 * time.Second)
-
-	c := basics.NewSubscribedConsumer(bootstrapServers, "some.consumer", []string{topic})
-	c.PollAsync(100, func(key string, value string) {
-		log.WithFields(log.Fields{
-			"key":   key,
-			"value": value,
-		}).Info("Message received")
-	})
-
-	mainChan := make(chan os.Signal, 1)
-
-	signal.Notify(mainChan, os.Interrupt)
-
-	<-mainChan
-
-	c.Stop()
-	p.Stop()
-
-	a.DeleteTopic(topic)
-
-	a.Close()
 }

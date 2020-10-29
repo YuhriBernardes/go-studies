@@ -1,10 +1,11 @@
-package basics
+package loop
 
 import (
 	"os"
 	"os/signal"
 	"time"
 
+	"github.com/YuhriBernardes/kafka/studies"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
@@ -13,11 +14,16 @@ const (
 	name = "basics"
 )
 
+var (
+	Cmd = &Command{}
+)
+
 type Command struct {
 }
 
 func (c *Command) run(cmd *cobra.Command, args []string) {
-	bootstrapServers, _ := cmd.PersistentFlags().GetString("bs")
+	bootstrapServers, _ := cmd.Parent().PersistentFlags().GetString("bs")
+
 	timeout := time.Second * 2
 	topic, _ := cmd.PersistentFlags().GetString("topic")
 
@@ -26,14 +32,14 @@ func (c *Command) run(cmd *cobra.Command, args []string) {
 		"topic":            topic,
 	}).Warn("Starting Basic example")
 
-	adm := NewAdmin(bootstrapServers, timeout)
+	adm := studies.NewAdmin(bootstrapServers, timeout)
 
 	adm.Newtopic(topic)
 
-	producer := NewProducer("Producer", bootstrapServers, []string{topic})
+	producer := studies.NewProducer("Producer", bootstrapServers, []string{topic})
 	producer.Start(2 * time.Second)
 
-	consumer := NewSubscribedConsumer(bootstrapServers, "some.consumer", []string{topic})
+	consumer := studies.NewSubscribedConsumer(bootstrapServers, "some.consumer", []string{topic})
 	consumer.PollAsync(100, func(key string, value string) {
 		log.WithFields(log.Fields{
 			"key":   key,
@@ -55,16 +61,17 @@ func (c *Command) run(cmd *cobra.Command, args []string) {
 	adm.Close()
 }
 
-func (c *Command) Command() *cobra.Command {
+func (c *Command) Register() {
 	cmd := &cobra.Command{
-		Use:   "basics",
+		Use:   "loop",
 		Short: "Basic consume and produce operations",
 		Long:  "Create a topic, with a cosumer subscribe to it and a producer. Every 2 seconds the produces produce a message to this topic and the consumer logs the message",
 		Run:   c.run,
 	}
 
 	cmd.PersistentFlags().String("topic", "basic.topic", "topic name")
-	return cmd
+
+	studies.Register(cmd)
 
 }
 

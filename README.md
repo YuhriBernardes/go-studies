@@ -6,3 +6,4 @@ My personal Golang studies. You must have `go` installed on your machine.
 
 ## Themes
 - [Go Scheduler](go_scheduler/README.md)
+- [Kafka](kafka/README.md)

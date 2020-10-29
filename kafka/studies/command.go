@@ -11,18 +11,12 @@ var (
 
 type Study interface {
 	Name() string
-	Command() *cobra.Command
+	Register()
 	run(cmd *cobra.Command, args []string)
 }
 
-func AddCommand(study Study) {
-	rootCmd.AddCommand(study.Command())
-}
-
-func AddCommands(studies []Study) {
-	for _, study := range studies {
-		AddCommand(study)
-	}
+func Register(cmd *cobra.Command) {
+	rootCmd.AddCommand(cmd)
 }
 
 func Execute() error {

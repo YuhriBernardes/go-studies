@@ -1,29 +1,23 @@
 # Go Scheduler
 
-To run the samples, use the command above
-
-```shell
-cd go_scheduler
-go run ./main.go <sample-name> <sample-specific-parameters>
-```
-
-You can also build the cli as described below:
-
-```shell
-go build -o gs main.go
-```
-
-So you can use as:
-```shell
-gs <sample-name> <sample-specific-parameters>
-```
-
-> Some samples doesn't have parameters
-
-|      Samples Name       | Description           |
-| :---------------------: | :-------------------- |
+| Samples Name            | Description           |
+| :---------------------- | :-------------------- |
 | [countdown](#countdown) | Parallel countdowns   |
-|   [servers](#servers)   | Parallel HTTP servers |
+| [servers](#servers)     | Parallel HTTP servers |
+
+## Running samples
+
+To make easier to execute the commands, you can devine an alias:
+
+```shell
+alias gs='go run ./main.go'
+```
+
+To run the samples, use the command below:
+
+```sh
+gs <sample-name> [OPTIONS]
+```
 
 ## Samples
 
@@ -34,41 +28,32 @@ An app with 2 countdowns in parallel
 To run the app, use the command below:
 
 ```shell
-go run ./main.go countdown --c1=<counter-1-value> --c2=<counter-2-value>
-```
-
-or
-
-```shell
 gs countdown --c1=<counter-1-value> --c2=<counter-2-value>
 ```
 
-#### Parameters
+#### Options
 
-| Required? | Parameter | Description             | Default |
-| --------- | --------- | ----------------------- | ------- |
-| NO        | c1        | Counter 1 initial value | 10      |
-| NO        | c2        | Counter 2 initial value | 10      |
+| Required? | Option | Description             | Default |
+| --------- | ------ | ----------------------- | ------- |
+| NO        | c1     | Counter 1 initial value | 10      |
+| NO        | c2     | Counter 2 initial value | 10      |
 
 
 ### Servers
 
 An app with 2 HTTP servers.
+
 To run the app, use the command below:
 
-```shell
-go run ./main.go servers --port1=<server1-port> --port2=<server2-port>
-```
-
-or
+> You can stop the app at any time by pressing `ctrl+c`
 
 ```shell
 gs servers --port1=<server1-port> --port2=<server2-port>
 ```
 
-#### Parameters
+#### Options
 
-| Required? | Parameter | Description   | Default |
-| --------- | --------- | ------------- | ------- |
-| NO        | port1     | Server 1 port | 3000    |
-| NO        | port2     | Server 2 port | 3001    |
+| Required? | Option | Description   | Default |
+| --------- | ------ | ------------- | ------- |
+| NO        | port1  | Server 1 port | 3000    |
+| NO        | port2  | Server 2 port | 3001    |
