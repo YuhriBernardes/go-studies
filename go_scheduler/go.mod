@@ -1,4 +1,4 @@
-module github.com/YuhriBernardes/gs-scheduler
+module github.com/YuhriBernardes/go-scheduler
 
 go 1.15
 

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/YuhriBernardes/gs-scheduler/sample"
+	"github.com/YuhriBernardes/go-scheduler/sample"
 	"github.com/spf13/cobra"
 
 	log "github.com/sirupsen/logrus"
